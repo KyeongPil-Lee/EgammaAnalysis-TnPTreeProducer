@@ -1,5 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
+import FWCore.PythonUtilities.LumiList as LumiList
 import sys
 
 
@@ -29,6 +30,7 @@ registerOption('includeSUSY', False,    'Add also the variables used by SUSY')
 
 registerOption('HLTname',     'HLT',    'HLT process name (default HLT)', optionType=VarParsing.varType.string) # HLTname was HLT2 in now outdated reHLT samples
 registerOption('GT',          'auto',   'Global Tag to be used', optionType=VarParsing.varType.string)
+registerOption('LUMIJSON',    'auto',   'Lumi json to be used', optionType=VarParsing.varType.string)
 registerOption('era',         '2018',   'Data-taking era: 2016, 2017, 2018, 2022, 2023, UL2017 or UL2018', optionType=VarParsing.varType.string)
 registerOption('logLevel',    'INFO',   'Loglevel: could be DEBUG, INFO, WARNING, ERROR', optionType=VarParsing.varType.string)
 
@@ -80,6 +82,7 @@ options['PHOTON_CUTS']          = "(abs(-log(tan(superCluster.position.theta/2))
 options['ELECTRON_TAG_CUTS']    = "(abs(-log(tan(superCluster.position.theta/2)))<=2.1) && !(1.4442<=abs(-log(tan(superClusterPosition.theta/2)))<=1.566) && pt >= 30.0"
 
 options['MAXEVENTS']            = cms.untracked.int32(varOptions.maxEvents)
+options['LUMIJSON']             = varOptions.LUMIJSON
 options['DoTrigger']            = varOptions.doTrigger
 options['DoRECO']               = varOptions.doRECO
 options['DoEleID']              = varOptions.doEleID
@@ -248,7 +251,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
-
+process.source.lumisToProcess = LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange()
 
 ###################################################################
 ## Define sequences and TnP pairs
