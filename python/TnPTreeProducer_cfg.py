@@ -31,6 +31,7 @@ registerOption('includeSUSY', False,    'Add also the variables used by SUSY')
 registerOption('HLTname',     'HLT',    'HLT process name (default HLT)', optionType=VarParsing.varType.string) # HLTname was HLT2 in now outdated reHLT samples
 registerOption('GT',          'auto',   'Global Tag to be used', optionType=VarParsing.varType.string)
 registerOption('LUMIJSON',    'auto',   'Lumi json to be used', optionType=VarParsing.varType.string)
+registerOption('INPUTDATASET', 'auto', 'Input dataset', optionType=VarParsing.varType.string)
 registerOption('era',         '2018',   'Data-taking era: 2016, 2017, 2018, 2022, 2023, UL2017 or UL2018', optionType=VarParsing.varType.string)
 registerOption('logLevel',    'INFO',   'Loglevel: could be DEBUG, INFO, WARNING, ERROR', optionType=VarParsing.varType.string)
 
@@ -83,6 +84,7 @@ options['ELECTRON_TAG_CUTS']    = "(abs(-log(tan(superCluster.position.theta/2))
 
 options['MAXEVENTS']            = cms.untracked.int32(varOptions.maxEvents)
 options['LUMIJSON']             = varOptions.LUMIJSON
+options['INPUTDATASET']         = varOptions.INPUTDATASET
 options['DoTrigger']            = varOptions.doTrigger
 options['DoRECO']               = varOptions.doRECO
 options['DoEleID']              = varOptions.doEleID
@@ -96,6 +98,9 @@ options['addSUSY']              = varOptions.includeSUSY and not options['useAOD
 options['OUTPUT_FILE_NAME']     = "TnPTree_%s.root" % ("mc" if options['isMC'] else "data")
 
 log.info('outputfile: %s' % options['OUTPUT_FILE_NAME'])
+
+
+print("GUARDA QUA:",varOptions.INPUTDATASET)
 
 #################################################
 # Settings for global tag
@@ -249,9 +254,11 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.threshold = ''
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
-process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
+#process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(options['INPUTDATASET']))
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 process.source.lumisToProcess = LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange()
+print(LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange())
 
 ###################################################################
 ## Define sequences and TnP pairs
