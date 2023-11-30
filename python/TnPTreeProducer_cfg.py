@@ -36,6 +36,7 @@ registerOption('era',         '2018',   'Data-taking era: 2016, 2017, 2018, 2022
 registerOption('logLevel',    'INFO',   'Loglevel: could be DEBUG, INFO, WARNING, ERROR', optionType=VarParsing.varType.string)
 
 registerOption('L1Threshold',  0,       'Threshold for L1 matched objects', optionType=VarParsing.varType.int)
+registerOption('OUTPUT_FILE_NAME',  'auto',  'Output file name', optionType=VarParsing.varType.string)
 
 varOptions.parseArguments()
 
@@ -95,7 +96,8 @@ options['isMC']                 = varOptions.isMC
 options['UseCalibEn']           = varOptions.calibEn
 options['addSUSY']              = varOptions.includeSUSY and not options['useAOD']
 
-options['OUTPUT_FILE_NAME']     = "TnPTree_%s.root" % ("mc" if options['isMC'] else "data")
+#options['OUTPUT_FILE_NAME']     = "TnPTree_%s.root" % ("mc" if options['isMC'] else "data")
+options['OUTPUT_FILE_NAME']     = varOptions.OUTPUT_FILE_NAME
 
 log.info('outputfile: %s' % options['OUTPUT_FILE_NAME'])
 
