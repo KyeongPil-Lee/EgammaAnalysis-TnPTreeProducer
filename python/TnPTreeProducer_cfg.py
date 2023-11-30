@@ -100,8 +100,6 @@ options['OUTPUT_FILE_NAME']     = "TnPTree_%s.root" % ("mc" if options['isMC'] e
 log.info('outputfile: %s' % options['OUTPUT_FILE_NAME'])
 
 
-print("GUARDA QUA:",varOptions.INPUTDATASET)
-
 #################################################
 # Settings for global tag
 #################################################
@@ -258,7 +256,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(options['INPUTDATASET']))
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 process.source.lumisToProcess = LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange()
-print(LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange())
+#print(LumiList.LumiList(filename = options['LUMIJSON']).getVLuminosityBlockRange())
 
 ###################################################################
 ## Define sequences and TnP pairs
