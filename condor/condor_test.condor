@@ -1,0 +1,10 @@
+universe = vanilla
+executable = /afs/cern.ch/user/r/rselvati/work/private/Tag_and_Probe/tree_producer/CMSSW_13_3_0/src/EgammaAnalysis/TnPTreeProducer/condor/exec.sh
+arguments = $(ProcId) 0 
+output = /afs/cern.ch/user/r/rselvati/work/private/Tag_and_Probe/tree_producer/CMSSW_13_3_0/src/EgammaAnalysis/TnPTreeProducer/condor/logs/$(ProcId).out
+error = /afs/cern.ch/user/r/rselvati/work/private/Tag_and_Probe/tree_producer/CMSSW_13_3_0/src/EgammaAnalysis/TnPTreeProducer/condor/logs/$(ProcId).err
+log  = /afs/cern.ch/user/r/rselvati/work/private/Tag_and_Probe/tree_producer/CMSSW_13_3_0/src/EgammaAnalysis/TnPTreeProducer/condor/logs/$(ProcId).log
+
+request_memory = 2000 
++MaxRuntime = 244000
+queue 1
