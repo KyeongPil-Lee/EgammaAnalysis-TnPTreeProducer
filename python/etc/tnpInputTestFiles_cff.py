@@ -20,8 +20,8 @@ filesMiniAOD_2016 = {
 
 # Some miniAOD UL testfiles, which are available now and hopefully don't get deleted too soon
 filesMiniAOD_UL2016preVFP = {
-    #'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer19UL16MiniAODAPV-DYJetsToLL_M-50.root'),
-    'mc':   cms.untracked.vstring('file:/eos/user/a/akadlecs/ntuples/ntupleinput_mc.root'),
+    #'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer19UL16MiniAODAPV-DYJetsToLL_M-50.root'), # this file no longer seems to work
+    'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer20UL16MiniAODv2-DY1JetsToLL_M-50-106X_mcRun2_asymptotic_v17-v1.root'),
     'data': cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/SingleElectron-Run2016E-21Feb2020_UL2016_HIPM.root'),
 }
 
