@@ -17,15 +17,17 @@ def registerOption(optionName, defaultValue, description, optionType=VarParsing.
       description
   )
 
-registerOption('isMC',        False,    'Use MC instead of data')
-registerOption('isAOD',       False,    'Use AOD samples instead of miniAOD')
-registerOption('is80X',       False,    'Compatibility to run on old 80X files')
-registerOption('doEleID',     True,     'Include tree for electron ID SF')
-registerOption('doPhoID',     True,     'Include tree for photon ID SF')
-registerOption('doTrigger',   True,     'Include tree for trigger SF')
-registerOption('doRECO',      False,    'Include tree for Reco SF (requires AOD)')
-registerOption('calibEn',     False,    'Use EGM smearer to calibrate photon and electron energy')
-registerOption('includeSUSY', False,    'Add also the variables used by SUSY')
+
+registerOption('isMC',         False,    'Use MC instead of data')
+registerOption('isAOD',        False,    'Use AOD samples instead of miniAOD')
+registerOption('is80X',        False,    'Compatibility to run on old 80X files')
+registerOption('doEleID',      True,     'Include tree for electron ID SF')
+registerOption('doLowPtEleID', False,    'Include tree for LowPtElectron ID SF')
+registerOption('doPhoID',      True,     'Include tree for photon ID SF')
+registerOption('doTrigger',    True,     'Include tree for trigger SF')
+registerOption('doRECO',       False,    'Include tree for Reco SF (requires AOD)')
+registerOption('calibEn',      False,    'Use EGM smearer to calibrate photon and electron energy')
+registerOption('includeSUSY',  False,    'Add also the variables used by SUSY')
 
 registerOption('HLTname',     'HLT',    'HLT process name (default HLT)', optionType=VarParsing.varType.string) # HLTname was HLT2 in now outdated reHLT samples
 registerOption('GT',          'auto',   'Global Tag to be used', optionType=VarParsing.varType.string)
@@ -41,19 +43,21 @@ varOptions.parseArguments()
 ###################################################################
 from EgammaAnalysis.TnPTreeProducer.logger import getLogger
 log = getLogger(varOptions.logLevel)
-if varOptions.isAOD and varOptions.doEleID:    log.warning('AOD is not supported for doEleID, please consider using miniAOD')
-if varOptions.isAOD and varOptions.doPhoID:    log.warning('AOD is not supported for doPhoID, please consider using miniAOD')
-if varOptions.isAOD and varOptions.doTrigger:  log.warning('AOD is not supported for doTrigger, please consider using miniAOD')
-if not varOptions.isAOD and varOptions.doRECO: log.warning('miniAOD is not supported for doRECO, please consider using AOD')
+if varOptions.isAOD and varOptions.doEleID:      log.warning('AOD is not supported for doEleID, please consider using miniAOD')
+if varOptions.isAOD and varOptions.doLowPtEleID: log.warning('AOD is not supported for doLowPtEleID, please consider using miniAOD')
+if varOptions.isAOD and varOptions.doPhoID:      log.warning('AOD is not supported for doPhoID, please consider using miniAOD')
+if varOptions.isAOD and varOptions.doTrigger:    log.warning('AOD is not supported for doTrigger, please consider using miniAOD')
+if not varOptions.isAOD and varOptions.doRECO:   log.warning('miniAOD is not supported for doRECO, please consider using AOD')
 
 from EgammaAnalysis.TnPTreeProducer.cmssw_version import isReleaseAbove
-if varOptions.era not in ['2016', '2017', '2018', 'UL2016preVFP', 'UL2016postVFP', 'UL2017', 'UL2018']: 
+if varOptions.era not in ['2016', '2017', '2018', 'UL2016preVFP', 'UL2016postVFP', 'UL2016miniAODv2','UL2017', 'UL2018']: 
   log.error('%s is not a valid era' % varOptions.era)
 if ('UL' in varOptions.era)!=(isReleaseAbove(10, 6)):
   log.error('Inconsistent release for era %s. Use CMSSW_10_6_X for UL and CMSSW_10_2_X for rereco' % varOptions.era)
 
 if varOptions.includeSUSY: log.info('Including variables for SUSY')
 if varOptions.doEleID:     log.info('Producing electron SF tree')
+if varOptions.doLowPtEleID:     log.info('Producing LowPtElectron SF tree')
 if varOptions.doPhoID:     log.info('Producing photon SF tree')
 if varOptions.doTrigger:   log.info('Producing HLT (trigger ele) efficiency tree')
 if varOptions.doRECO:      log.info('Producing RECO SF tree')
@@ -71,10 +75,12 @@ options['HLTProcessName']       = varOptions.HLTname
 options['era']                  = varOptions.era
 
 options['ELECTRON_COLL']        = "gedGsfElectrons" if options['useAOD'] else "slimmedElectrons"
+options['LOWPTELECTRON_COLL']   = "gedGsfElectrons" if options['useAOD'] else "slimmedLowPtElectrons"
 options['PHOTON_COLL']          = "gedPhotons" if options['useAOD'] else "slimmedPhotons"
 options['SUPERCLUSTER_COLL']    = "reducedEgamma:reducedSuperClusters" ### not used in AOD
 
-options['ELECTRON_CUTS']        = "ecalEnergy*sin(superClusterPosition.theta)>5.0 &&  (abs(-log(tan(superClusterPosition.theta/2)))<2.5)"
+options['ELECTRON_CUTS']        = "ecalEnergy*sin(superClusterPosition.theta)>5.0 &&  (abs(-log(tan(superClusterPosition.theta/2)))<2.5)" 
+options['LOWPTELECTRON_CUTS']   = "ecalEnergy*sin(superClusterPosition.theta)>1.0 &&  (abs(-log(tan(superClusterPosition.theta/2)))<2.5)" #pt cut relaxed to 1 GeV
 options['SUPERCLUSTER_CUTS']    = "abs(eta)<2.5 &&  et>5.0"
 options['PHOTON_CUTS']          = "(abs(-log(tan(superCluster.position.theta/2)))<=2.5) && pt> 10"
 options['ELECTRON_TAG_CUTS']    = "(abs(-log(tan(superCluster.position.theta/2)))<=2.1) && !(1.4442<=abs(-log(tan(superClusterPosition.theta/2)))<=1.566) && pt >= 30.0"
@@ -83,6 +89,7 @@ options['MAXEVENTS']            = cms.untracked.int32(varOptions.maxEvents)
 options['DoTrigger']            = varOptions.doTrigger
 options['DoRECO']               = varOptions.doRECO
 options['DoEleID']              = varOptions.doEleID
+options['DoLowPtEleID']         = varOptions.doLowPtEleID
 options['DoPhoID']              = varOptions.doPhoID
 
 options['DEBUG']                = False 
@@ -102,6 +109,8 @@ if varOptions.GT == "auto":
     if options['era'] == '2018':   options['GLOBALTAG'] = '102X_upgrade2018_realistic_v21'
     if options['era'] == 'UL2016preVFP':  options['GLOBALTAG'] = '106X_mcRun2_asymptotic_preVFP_v9'
     if options['era'] == 'UL2016postVFP': options['GLOBALTAG'] = '106X_mcRun2_asymptotic_v15'
+    # lowpt electrons require miniAOD v2 samples
+    if options['era'] == 'UL2016miniAODv2':  options['GLOBALTAG'] = '106X_mcRun2_asymptotic_v17'
     if options['era'] == 'UL2017': options['GLOBALTAG'] = '106X_dataRun2_v28'
     if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_dataRun2_v28'
   else:
@@ -110,6 +119,7 @@ if varOptions.GT == "auto":
     if options['era'] == '2018':   options['GLOBALTAG'] = '102X_dataRun2_v13'
     if options['era'] == 'UL2016preVFP':  options['GLOBALTAG'] = '106X_dataRun2_v32'
     if options['era'] == 'UL2016postVFP': options['GLOBALTAG'] = '106X_dataRun2_v32'
+    if options['era'] == 'UL2016miniAODv2':  options['GLOBALTAG'] = '106X_dataRun2_v27'
     if options['era'] == 'UL2017': options['GLOBALTAG'] = '106X_mc2017_realistic_v7'
     if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_upgrade2018_realistic_v11_L1v1'
 else:
@@ -121,7 +131,7 @@ else:
 if '2016' in options['era']:
   options['TnPPATHS']           = cms.vstring("HLT_Ele27_eta2p1_WPTight_Gsf_v*")
   options['TnPHLTTagFilters']   = cms.vstring("hltEle27erWPTightGsfTrackIsoFilter")
-  options['TnPHLTProbeFilters'] = cms.vstring()
+  options['TnPHLTProbeFilters'] = cms.vstring() 
   options['HLTFILTERSTOMEASURE']= {"passHltEle27WPTightGsf" :                           cms.vstring("hltEle27WPTightGsfTrackIsoFilter"),
                                    "passHltEle23Ele12CaloIdLTrackIdLIsoVLLeg1L1match" : cms.vstring("hltEle23Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg1Filter"),
                                    "passHltEle23Ele12CaloIdLTrackIdLIsoVLLeg2" :        cms.vstring("hltEle23Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg2Filter"),
@@ -223,19 +233,24 @@ process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 ###################################################################
 process.cand_sequence = cms.Sequence( process.init_sequence + process.tag_sequence )
 if options['DoEleID'] or options['DoTrigger'] : process.cand_sequence += process.ele_sequence
+if options['DoLowPtEleID']                    : process.cand_sequence += process.lowptele_sequence
 if options['DoPhoID']                         : process.cand_sequence += process.pho_sequence
 if options['DoTrigger']                       : process.cand_sequence += process.hlt_sequence
 if options['DoRECO']                          : process.cand_sequence += process.sc_sequence
 
 process.tnpPairs_sequence = cms.Sequence()
-if options['DoTrigger'] : process.tnpPairs_sequence *= process.tnpPairingEleHLT
-if options['DoRECO']    : process.tnpPairs_sequence *= process.tnpPairingEleRec
-if options['DoEleID']   : process.tnpPairs_sequence *= process.tnpPairingEleIDs
-if options['DoPhoID']   : process.tnpPairs_sequence *= process.tnpPairingPhoIDs
+if options['DoTrigger']    : process.tnpPairs_sequence *= process.tnpPairingEleHLT
+if options['DoLowPtEleID'] : process.tnpPairs_sequence *= process.tnpPairingLowPtEleHLT
+if options['DoRECO']       : process.tnpPairs_sequence *= process.tnpPairingEleRec
+if options['DoEleID']      : process.tnpPairs_sequence *= process.tnpPairingEleIDs
+if options['DoLowPtEleID'] : process.tnpPairs_sequence *= process.tnpPairingLowPtEleIDs
+if options['DoPhoID']      : process.tnpPairs_sequence *= process.tnpPairingPhoIDs
 
 ##########################################################################
 ## TnP Trees
 ##########################################################################
+
+# Electron module
 process.tnpEleTrig = cms.EDAnalyzer("TagProbeFitTreeProducer",
                                     mcTruthCommonStuff,
                                     tnpVars.CommonStuffForGsfElectronProbe,
@@ -280,7 +295,41 @@ for probeEleModule in str(process.ele_sequence).split('+'):
   setattr(process.tnpEleIDs.flags,  probeEleModule.replace('probeEle', 'passing'), cms.InputTag(probeEleModule))
 
 
+# LowPtElectron module
+if options['DoLowPtEleID']:
+  process.tnpLowPtEleTrig = cms.EDAnalyzer("TagProbeFitTreeProducer",
+                                      mcTruthCommonStuff,
+                                      tnpVars.CommonStuffForLowPtElectronProbe,    #
+                                      tagProbePairs = cms.InputTag("tnpPairingLowPtEleHLT"),
+                                      probeMatches  = cms.InputTag("genProbeLowPtEle"),
+                                      allProbes     = cms.InputTag("probeLowPtEle"),
+                                      flags         = cms.PSet(),
+                                      )
 
+  for flag in options['HLTFILTERSTOMEASURE']:
+    setattr(process.tnpLowPtEleTrig.flags, flag, cms.InputTag(flag))
+
+
+  process.tnpLowPtEleIDs = cms.EDAnalyzer("TagProbeFitTreeProducer",
+                                      mcTruthCommonStuff,
+                                      tnpVars.CommonStuffForLowPtElectronProbe,    #
+                                      tagProbePairs = cms.InputTag("tnpPairingLowPtEleIDs"),
+                                      probeMatches  = cms.InputTag("genProbeLowPtEle"),
+                                      allProbes     = cms.InputTag("probeLowPtEle"),
+                                      flags         = cms.PSet(),
+                                      )
+
+  # ID's to store in the electron ID and trigger tree
+  # Simply look which probeEleX modules were made in egmElectronIDModules_cff.py and convert them into a passingX boolean in the tree 
+  for probeLowPtEleModule in str(process.lowptele_sequence).split('+'):
+    if not 'probeLowPtEle' in probeLowPtEleModule or probeLowPtEleModule in ['probeLowPtEle', 'probeLowPtEleL1matched']: continue
+    setattr(process.tnpLowPtEleTrig.flags, probeLowPtEleModule.replace('probeLowPtEle', 'passing'), cms.InputTag(probeLowPtEleModule))
+    setattr(process.tnpLowPtEleIDs.flags,  probeLowPtEleModule.replace('probeLowPtEle', 'passing'), cms.InputTag(probeLowPtEleModule))
+
+
+
+
+# Photon module
 process.tnpPhoIDs = cms.EDAnalyzer("TagProbeFitTreeProducer",
                                     mcTruthCommonStuff,
                                     tnpVars.CommonStuffForPhotonProbe,
@@ -310,15 +359,22 @@ if options['addSUSY'] :
 
 tnpSetup.customize( process.tnpEleTrig , options )
 tnpSetup.customize( process.tnpEleIDs  , options )
+
+if options['DoLowPtEleID']:
+  tnpSetup.customize( process.tnpLowPtEleTrig , options )
+  tnpSetup.customize( process.tnpLowPtEleIDs  , options )
+
 tnpSetup.customize( process.tnpPhoIDs  , options )
 tnpSetup.customize( process.tnpEleReco , options )
 
 
 process.tree_sequence = cms.Sequence()
-if (options['DoTrigger']): process.tree_sequence *= process.tnpEleTrig
-if (options['DoRECO'])   : process.tree_sequence *= process.tnpEleReco
-if (options['DoEleID'])  : process.tree_sequence *= process.tnpEleIDs
-if (options['DoPhoID'])  : process.tree_sequence *= process.tnpPhoIDs
+if (options['DoTrigger'])    : process.tree_sequence *= process.tnpEleTrig  
+if (options['DoLowPtEleID']) : process.tree_sequence *= process.tnpLowPtEleTrig #
+if (options['DoRECO'])       : process.tree_sequence *= process.tnpEleReco
+if (options['DoEleID'])      : process.tree_sequence *= process.tnpEleIDs
+if (options['DoLowPtEleID']) : process.tree_sequence *= process.tnpLowPtEleIDs #
+if (options['DoPhoID'])      : process.tree_sequence *= process.tnpPhoIDs
 
 ##########################################################################
 ## PATHS
