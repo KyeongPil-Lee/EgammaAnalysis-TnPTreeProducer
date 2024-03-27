@@ -49,7 +49,7 @@ ls /eos/cms/store/group/phys_egamma/tnpTuples/rasharma/2021-02-10/UL2016preVFP/m
 cmsrel CMSSW_10_2_22
 cd CMSSW_10_2_22/src
 cmsenv
-git clone -b RunIIfinal https://github.com/cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
+git clone -b RunIIfinal git@github.com:cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
 scram b -j8
 ```
 
@@ -59,7 +59,7 @@ scram b -j8
 cmsrel CMSSW_10_6_13
 cd CMSSW_10_6_13/src
 cmsenv
-git clone -b RunIIfinal https://github.com/cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
+git clone -b RunIIfinal git@github.com:cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
 scram b -j8
 ```
 
