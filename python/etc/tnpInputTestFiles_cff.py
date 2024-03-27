@@ -20,7 +20,8 @@ filesMiniAOD_2016 = {
 
 # Some miniAOD UL testfiles, which are available now and hopefully don't get deleted too soon
 filesMiniAOD_UL2016preVFP = {
-    'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer19UL16MiniAODAPV-DYJetsToLL_M-50.root'),
+    #'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer19UL16MiniAODAPV-DYJetsToLL_M-50.root'), # this file no longer seems to work
+    'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer20UL16MiniAODv2-DY1JetsToLL_M-50-106X_mcRun2_asymptotic_v17-v1.root'),
     'data': cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/SingleElectron-Run2016E-21Feb2020_UL2016_HIPM.root'),
 }
 
@@ -28,6 +29,20 @@ filesMiniAOD_UL2016postVFP = {
     'mc':   cms.untracked.vstring(''),
     'data': cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/SingleElectron-Run2016F-21Feb2020_UL2016-postVFP.root'),
 }
+
+filesMiniAOD_UL2016miniAODv2 = {
+    # test samples specifically for lowpt electron tnp production
+    # later switch to Jpsi, might be better for lowpt electrons
+    #'mc' :  cms.untracked.vstring('/store/mc/RunIISummer20UL16MiniAODv2/DY1JetsToLL_M-50_MatchEWPDG20_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/00061BF0-5BB0-524E-A539-0CAAD8579386.root'),
+
+    'mc':   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer20UL16MiniAODv2-DY1JetsToLL_M-50-106X_mcRun2_asymptotic_v17-v1.root'),
+    'data': cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/SingleElectron-UL2016_MiniAODv2-v2-Run2016H-02A3E4FE-B0AA-F546-981D-283EB73FBAC9.root'),
+
+    #'mc' :  cms.untracked.vstring('/store/mc/RunIISummer20UL16MiniAODv2/DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8/MINIAODSIM/106X_mcRun2_asymptotic_v17-v2/2520000/C2390145-5FF1-5E45-97B0-925095E9BAD9.root'),  
+    #'data' : cms.untracked.vstring('/store/data/Run2016H/SingleElectron/MINIAOD/UL2016_MiniAODv2-v2/120000/02A3E4FE-B0AA-F546-981D-283EB73FBAC9.root'),
+}
+
+
 
 filesMiniAOD_UL2018 = {
     'mc' :   cms.untracked.vstring('file:/eos/cms/store/group/phys_egamma/tnpTuples/testFiles/RunIISummer19UL18MiniAOD-DYJetsToEE_M-50.root'),

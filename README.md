@@ -102,3 +102,14 @@ flexibility to explore different workingpoints: you can simply put a cut on thes
 ## Description of variables
 
 Description of some of variables in the output tree is given [here](VariablesInfo.md).
+
+## LowPtElectron ntuples
+
+You can create ntuples for the LowPtElectron collection with the RunIIfinal branch and CMSSW_10_6_13 by using
+```bash
+cmsRun TnPTreeProducer_cfg.py doLowPtEleID=True
+```
+This requires samples in miniAOD v2 format. Some test files are immediately available for this by using era=UL2016miniAODv2:
+```bash
+cmsRun TnPTreeProducer_cfg.py doLowPtEleID=True era=UL2016miniAODv2
+```

@@ -10,6 +10,7 @@ import EgammaAnalysis.TnPTreeProducer.egmGoodParticlesDef_cff as goodPartDef
 def setTagsProbes(process, options):
 
     eleHLTProducer = 'PatElectronTriggerCandProducer'
+    lowpteleHLTProducer = 'PatLowPtElectronTriggerCandProducer'
     gamHLTProducer = 'PatPhotonTriggerCandProducer'
     hltObjects     = 'selectedPatTrigger' if options['use80X'] else 'slimmedPatTrigger'
     genParticles   = 'prunedGenParticles'
@@ -43,10 +44,21 @@ def setTagsProbes(process, options):
     process.probeEle.filterNames = cms.vstring(options['TnPHLTProbeFilters'])
     process.probeEle.inputs      = cms.InputTag("goodElectrons")
 
+    # LowPtElectron probes
+    process.probeLowPtEle             = process.tagEle.clone()
+    process.probeLowPtEle.filterNames = cms.vstring(options['TnPHLTProbeFilters'])
+    process.probeLowPtEle.inputs      = cms.InputTag("goodLowPtElectrons") 
+
     ################# PROBE ELECTRONs passHLT #######################
     process.probeElePassHLT        = process.tagEle.clone()
     process.probeElePassHLT.inputs = cms.InputTag("probeEle")
     process.probeElePassHLT.isAND  = cms.bool(False)
+
+
+    process.probeLowPtElePassHLT        = process.tagEle.clone()
+    process.probeLowPtElePassHLT        = process.probeLowPtEle.clone()
+    process.probeLowPtElePassHLT.inputs = cms.InputTag("probeLowPtEle")
+    process.probeLowPtElePassHLT.isAND  = cms.bool(False)
 
     ################# PROBE Matched to L1 #######################
     if options['ApplyL1Matching']:
@@ -64,9 +76,30 @@ def setTagsProbes(process, options):
       process.probeElePassHLTL1matched        = process.probeElePassHLT.clone()
       process.probeElePassHLTL1matched.inputs = cms.InputTag("probeEleL1matched")
 
+      if options['DoLowPtEleID']:
+        process.goodLowPtElectronProbesL1 = cms.EDProducer("PatElectronL1Stage2CandProducer",
+                                                    inputs       = cms.InputTag("goodLowPtElectrons"),
+                                                    objects      = cms.InputTag("caloStage2Digis:EGamma"),
+                                                    minET        = cms.double(options['L1Threshold']), #lead eff only
+                                                    dRmatch      = cms.double(0.2), #match L1 online to hlt in EB
+                                                    dRmatchEE    = cms.double(0.2), #match L1 online to hlt in EE
+                                                    isolatedOnly = cms.bool(False)
+        )
+        process.probeLowPtEleL1matched               = process.probeLowPtEle.clone()
+        process.probeLowPtEleL1matched.inputs        = cms.InputTag("goodLowPtElectronProbesL1")
+        process.probeLowPtElePassHLTL1matched        = process.probeLowPtElePassHLT.clone()
+        process.probeLowPtElePassHLTL1matched.inputs = cms.InputTag("probeLowPtEleL1matched")
+
+
+
     for flag, filterNames in options['HLTFILTERSTOMEASURE'].iteritems():
       if 'L1match' in flag: setattr(process, flag, process.probeElePassHLTL1matched.clone(filterNames=filterNames))
       else:                 setattr(process, flag, process.probeElePassHLT.clone(filterNames=filterNames))
+
+      
+      if options['DoLowPtEleID']:
+        if 'L1match' in flag: setattr(process, flag, process.probeLowPtElePassHLTL1matched.clone(filterNames=filterNames))
+        else:                 setattr(process, flag, process.probeLowPtElePassHLT.clone(filterNames=filterNames))
 
     ###################### PROBE PHOTONs ############################
     process.probePho  = cms.EDProducer( gamHLTProducer,
@@ -118,9 +151,10 @@ def setTagsProbes(process, options):
                                             resolveByMatchQuality = cms.bool(True),  # False = just match input in order; True = pick lowest deltaR pair first
                                             )
 
-        process.genProbeEle  = process.genTagEle.clone( src = cms.InputTag("probeEle") )
-        process.genProbePho  = process.genTagEle.clone( src = cms.InputTag("probePho") )
-        process.genProbeSC   = process.genTagEle.clone( src = cms.InputTag("probeSC")  )
+        process.genProbeEle       = process.genTagEle.clone( src = cms.InputTag("probeEle") )
+        process.genProbeLowPtEle  = process.genTagEle.clone( src = cms.InputTag("probeLowPtEle") )
+        process.genProbePho       = process.genTagEle.clone( src = cms.InputTag("probePho") )
+        process.genProbeSC        = process.genTagEle.clone( src = cms.InputTag("probeSC")  )
 
 
     ########################### TnP pairs ############################
@@ -130,14 +164,28 @@ def setTagsProbes(process, options):
                                         checkCharge = cms.bool(True),
                                         cut = masscut,
                                         )
+    
+    if options['DoLowPtEleID']:
+        process.tnpPairingLowPtEleHLT   = cms.EDProducer("CandViewShallowCloneCombiner",
+                                            decay = cms.string("tagEle@+ probeLowPtEle@-"),
+                                            checkCharge = cms.bool(True),
+                                            cut = masscut,
+                                            )
 
     process.tnpPairingEleRec             = process.tnpPairingEleHLT.clone()
     process.tnpPairingEleRec.decay       = cms.string("tagEle probeSC" )
     process.tnpPairingEleRec.checkCharge = cms.bool(False)
 
+
     process.tnpPairingEleIDs             = process.tnpPairingEleHLT.clone()
     process.tnpPairingEleIDs.decay       = cms.string("tagEle probeEle")
     process.tnpPairingEleIDs.checkCharge = cms.bool(False)
+
+
+    if options['DoLowPtEleID']:
+        process.tnpPairingLowPtEleIDs             = process.tnpPairingLowPtEleHLT.clone()
+        process.tnpPairingLowPtEleIDs.decay       = cms.string("tagEle probeLowPtEle")
+        process.tnpPairingLowPtEleIDs.checkCharge = cms.bool(False)
 
     process.tnpPairingPhoIDs             = process.tnpPairingEleHLT.clone()
     process.tnpPairingPhoIDs.decay       = cms.string("tagEle probePho")
@@ -170,10 +218,16 @@ def setSequences(process, options):
     import EgammaAnalysis.TnPTreeProducer.egmElectronIDModules_cff as egmEleID
     process.ele_sequence  = egmEleID.setIDs(process, options)
     process.ele_sequence += cms.Sequence(process.probeEle)
+    if options['DoLowPtEleID']:
+        process.lowptele_sequence = egmEleID.setIDs(process, options)
+        process.lowptele_sequence += cms.Sequence(process.probeLowPtEle)
 
     if options['ApplyL1Matching']:
       process.ele_sequence += process.goodElectronProbesL1
       process.ele_sequence += process.probeEleL1matched
+      if options['DoLowPtEleID']:
+        process.lowptele_sequence += process.goodLowPtElectronProbesL1
+        process.lowptele_sequence += process.probeLowPtEleL1matched
 
     process.tag_sequence = cms.Sequence(
         process.goodElectrons             +
@@ -191,10 +245,12 @@ def setSequences(process, options):
         process.hlt_sequence += getattr(process, flag)
 
     if options['isMC'] :
-        process.tag_sequence += process.genEle + process.genTagEle
-        process.ele_sequence += process.genProbeEle
-        process.pho_sequence += process.genProbePho
-        process.sc_sequence  += process.genProbeSC
+        process.tag_sequence      += process.genEle + process.genTagEle
+        process.ele_sequence      += process.genProbeEle
+        if options['DoLowPtEleID']:
+            process.lowptele_sequence += process.genProbeLowPtEle
+        process.pho_sequence      += process.genProbePho
+        process.sc_sequence       += process.genProbeSC
 
     process.init_sequence += process.egmGsfElectronIDSequence
     process.init_sequence += process.egmPhotonIDSequence

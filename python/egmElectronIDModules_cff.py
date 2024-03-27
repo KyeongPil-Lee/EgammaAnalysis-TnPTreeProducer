@@ -92,6 +92,17 @@ def setIDs(process, options):
 
     addNewProbeModule(probeSequence, 'MVA94XwpHZZisoV2', 'egmGsfElectronIDs:mvaEleID-Fall17-iso-V2-wpHZZ')
 
+    if options['DoLowPtEleID']:
+      # Add goodLowPtElectrons to probe sequence
+      #temp = cms.EDProducer('GsfElectronSelectorByValueMap' if options['useAOD'] else 'PatElectronSelectorByValueMap',
+      #                          input     = cms.InputTag("goodLowPtElectrons"),
+      #                          cut       = cms.string("pt>0"),
+      #                          selection = cms.InputTag('egmGsfElectronIDs:cutBasedElectronHLTPreselection-Summer16-V1'), #inputag
+      #                          id_cut    = cms.bool(True)
+      #                         )
+      #setattr(process, 'probeLowPtEle%s' % 'HLTsafe', temp)  #name
+      probeSequence += process.goodLowPtElectrons
+    
     #
     # For cut based 94X V2, also check partial cuts
     #

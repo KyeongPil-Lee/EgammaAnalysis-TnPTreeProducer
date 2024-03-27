@@ -1,5 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
+
 ##########################################################################
 ## TREE CONTENT
 #########################################################################
@@ -22,6 +23,7 @@ SCProbeVariablesToStore = cms.PSet(
     sc_e      = cms.string("energy"),
     sc_tkIso  = cms.InputTag("recoEcalCandidateHelper:scTkIso"),
     )
+
 
 EleProbeVariablesToStore = cms.PSet(
     el_eta    = cms.string("eta"),
@@ -133,6 +135,61 @@ EleProbeVariablesToStore = cms.PSet(
 
     )
 
+
+
+LowPtEleProbeVariablesToStore = cms.PSet(
+    el_eta    = cms.string("eta"),
+    el_phi    = cms.string("phi"),
+    el_abseta = cms.string("abs(eta)"),
+    el_pt     = cms.string("pt"),
+    #el_pf_pt  = cms.InputTag("eleVarHelper:pfPt"),
+    el_et     = cms.string("et"),
+    el_e      = cms.string("energy"),
+    el_q      = cms.string("charge"),
+    el_isGap  = cms.string("isGap"),
+
+    
+    ## super cluster quantities
+    el_sc_e          = cms.string("superCluster().energy"),
+    el_sc_rawE       = cms.string("superCluster().rawEnergy"),
+    el_sc_esE        = cms.string("superCluster().preshowerEnergy"),
+    el_sc_et         = cms.string("superCluster().energy*sin(superClusterPosition.theta)"),    
+    el_sc_eta        = cms.string("-log(tan(superCluster.position.theta/2))"),
+    el_sc_phi        = cms.string("superCluster.phi"),    
+    el_sc_abseta     = cms.string("abs(-log(tan(superCluster.position.theta/2)))"),
+    el_seed_e        = cms.string("superCluster.seed.energy"), 
+    el_ecalEnergy    = cms.string("ecalEnergy()"),
+
+
+    #isolation
+    el_chIso               = cms.string("pfIsolationVariables().sumChargedHadronPt"),
+    el_phoIso              = cms.string("pfIsolationVariables().sumPhotonEt"),
+    el_neuIso              = cms.string("pfIsolationVariables().sumNeutralHadronEt"),
+    el_dr03EcalRecHitSumEt = cms.string("dr03EcalRecHitSumEt"),
+    el_ecalIso             = cms.string("ecalPFClusterIso"), 
+    el_hcalIso             = cms.string("hcalPFClusterIso"), 
+    el_trkIso              = cms.string("trackIso"),
+    el_dr03TkSumPt         = cms.string("dr03TkSumPt"),
+
+    #added for VHbbEIso
+    el_sumPUPt       = cms.string("pfIsolationVariables().sumPUPt"),
+    el_relIso03_dB   = cms.string("(pfIsolationVariables().sumChargedHadronPt + max(pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt,0.0)) / pt() "),
+
+
+    # BDT ID:
+    el_ID      = cms.string("electronID('ID')"),
+    el_unbiasedID      = cms.string("electronID('unbiased')"),
+    el_ptbiasedID      = cms.string("electronID('ptbiased')"),
+
+    # mini isolation
+    # available terms: https://github.com/cms-sw/cmssw/blob/b71499200b31f749544215e3b20b82ec597eef0e/DataFormats/PatCandidates/interface/PFIsolation.h#L29
+    el_miniIsoAll = cms.string("miniPFIsolation().chargedHadronIso() + max(0.0, miniPFIsolation().photonIso() + miniPFIsolation().neutralHadronIso() - miniPFIsolation().puChargedHadronIso())"),
+    el_miniIsoChg = cms.string("miniPFIsolation().chargedHadronIso()"),
+    el_miniIsoNeu = cms.string("miniPFIsolation().neutralHadronIso()"),
+    el_miniIsoPho = cms.string("miniPFIsolation().photonIso()"),
+    el_miniIsoPu = cms.string("miniPFIsolation().puChargedHadronIso()"),
+)
+
 PhoProbeVariablesToStore = cms.PSet(
     ph_eta    = cms.string("eta"),
     ph_abseta = cms.string("abs(eta)"),
@@ -235,6 +292,10 @@ CommonStuffForGsfElectronProbe = cms.PSet(
     tagFlags       =  cms.PSet(),    
     
     )
+
+CommonStuffForLowPtElectronProbe = CommonStuffForGsfElectronProbe.clone()
+CommonStuffForLowPtElectronProbe.variables = cms.PSet(LowPtEleProbeVariablesToStore)
+
 
 CommonStuffForPhotonProbe = CommonStuffForGsfElectronProbe.clone()
 CommonStuffForPhotonProbe.variables = cms.PSet(PhoProbeVariablesToStore)
