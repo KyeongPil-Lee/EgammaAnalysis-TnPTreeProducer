@@ -132,6 +132,7 @@ EleProbeVariablesToStore = cms.PSet(
     el_ep             = cms.string("eSuperClusterOverP()"),
     el_eelepout       = cms.string("eEleClusterOverPout()"),
     el_IoEmIop        = cms.InputTag("eleVarHelper:ioemiop"),
+    el_seedGain       = cms.InputTag("eleVarHelper:seedGain"),
 
     )
 
@@ -248,6 +249,9 @@ TagVariablesToStore = cms.PSet(
     Ele_e      = cms.string("energy"),
     Ele_q      = cms.string("charge"),
     Ele_3charge = cms.string("chargeInfo().isGsfCtfScPixConsistent"),
+
+    Ele_5x5_r9        = cms.string("full5x5_showerShape().r9"),
+    Ele_seedGain      = cms.InputTag("eleVarHelper:seedGain"),
     
     ## super cluster quantities
     sc_e      = cms.string("superCluster.energy"),

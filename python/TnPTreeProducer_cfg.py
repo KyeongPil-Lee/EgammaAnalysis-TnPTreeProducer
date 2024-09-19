@@ -23,7 +23,7 @@ registerOption('isAOD',        False,    'Use AOD samples instead of miniAOD')
 registerOption('is80X',        False,    'Compatibility to run on old 80X files')
 registerOption('doEleID',      True,     'Include tree for electron ID SF')
 registerOption('doLowPtEleID', False,    'Include tree for LowPtElectron ID SF')
-registerOption('doPhoID',      True,     'Include tree for photon ID SF')
+registerOption('doPhoID',      False,    'Include tree for photon ID SF')
 registerOption('doTrigger',    True,     'Include tree for trigger SF')
 registerOption('doRECO',       False,    'Include tree for Reco SF (requires AOD)')
 registerOption('calibEn',      False,    'Use EGM smearer to calibrate photon and electron energy')
@@ -225,6 +225,7 @@ process.MessageLogger.cerr.threshold = ''
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
+# process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/40000/7F358B2D-0039-C643-A14C-0AF86E36AE75.root") )
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 
 

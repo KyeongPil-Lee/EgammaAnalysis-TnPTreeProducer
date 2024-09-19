@@ -1,115 +1,88 @@
-# EgammaAnalysis-TnPTreeProducer
+To include seed gain information in Run-2 EGM TnP Tree
 
-Package of the EGamma group to produce Tag-and-Probe trees
+# Reference
 
-## Overview of branches
+* https://github.com/cms-egamma/EgammaAnalysis-TnPTreeProducer/tree/RunIIfinal
 
-| Branch                                     | release            | tnpEleIDs          | tnpPhoIDs          | tnpEleTrig         | tnpEleReco         | purpose                                |
-| ------------------------------------------ | ------------------ |:------------------:|:------------------:|:------------------:|:------------------:|:--------------------------------------:|
-|                                            |                    | *miniAOD*          | *miniAOD*          | *miniAOD*          | *AOD*              |                                        |
-| [RunIIfinal](../../tree/RunIIfinal)        | CMSSW\_10\_2       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Run II analysis                        |
-| [RunIIfinal](../../tree/RunIIfinal)        | CMSSW\_10\_6       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Run II analysis using ultra-legacy     |
-| [CMSSW\_11\_X\_Y](../../tree/CMSSW_11_X_Y) | CMSSW\_11          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :white_check_mark: | Development for Run III (experimental) |
+# Recipe
 
-Note: because of a dataformat CMSSW\_10\_6 can only be used for ultra-legacy samples, and CMSSW\_10\_2 should be used for the rereco samples.
-
-## Available tuples
-
-### ReReco 2016, 2017 and 2018
-If you do not need changes to the default code, you can simply use existing flat tag and probe trees, avalaible for both 2016, 2017 and 2018 (RunIIfinal branch):
+* initial setup for the first time
 
 ```bash
-ls /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-06-09/*/merged/
-```
+lxplus
 
-These inlcude the tnpEleTrig, tnpEleIDs and tnpPhoIDs trees produced with the RunIIfinal branch.
-*Main change with respect to the 2020-02-28 production is the inclusion of some additional branches, e.g. the leptonMva's*
+cd /afs/cern.ch/user/k/kplee/work/private/Detector/EGMTnPTree
 
-### ReReco 2016, 2017 and 2018 - L1 matched
-In case you need L1 matching for the measurement of doubleEle HLT triggers, you can use the tnpEleTrig trees found in:
+# -- change to CentOS7
+# -- https://cms-sw.github.io/singularity.html
+cmssw-el7
 
-```bash
-ls /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-03-03/*/merged/*L1matched.root
-```
-
-### UL2017 and UL2018
-For ultra-legacy  we have tnpEleTrig, tnpEleIDs and tnpPhoIDs trees available at:
-```
-ls /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-20/UL2018/merged
-ls /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-20/UL2017/merged
-ls /eos/cms/store/group/phys_egamma/tnpTuples/rasharma/2021-02-10/UL2016postVFP/merged
-ls /eos/cms/store/group/phys_egamma/tnpTuples/rasharma/2021-02-10/UL2016preVFP/merged
-```
-
-
-## To produce new tuples
-### 1a. Install for rereco (CMSSW\_10\_2\_X with X=10 or higher, works for 2016, 2017 and 2018 data/MC)
-
-```bash
-cmsrel CMSSW_10_2_22
-cd CMSSW_10_2_22/src
-cmsenv
-git clone -b RunIIfinal git@github.com:cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
-scram b -j8
-```
-
-### 1b. Install for ultra-legacy (CMSSW\_10\_6\_X, works for UL2017 and UL2018 data/MC)
-
-```bash
+export SCRAM_ARCH=slc7_amd64_gcc700
 cmsrel CMSSW_10_6_13
 cd CMSSW_10_6_13/src
 cmsenv
 git clone -b RunIIfinal git@github.com:cms-egamma/EgammaAnalysis-TnPTreeProducer.git EgammaAnalysis/TnPTreeProducer
 scram b -j8
+
+cd EgammaAnalysis/TnPTreeProducer
+git remote add mycode git@github.com:KyeongPil-Lee/EgammaAnalysis-TnPTreeProducer.git
+git checkout -b "RunII_seedGain"
+
 ```
 
-### 2. Try-out
-You can find the cmsRun executable in EgammaAnalysis/TnPTreeProducer/python:
+* after the initial setup
+
 ```bash
-cd EgammaAnalysis/TnPTreeProducer/python/
-cmsRun TnPTreeProducer_cfg.py isMC=True doTrigger=True era=UL2018
+lxplus
+
+cmssw-el7
+
+cd /afs/cern.ch/user/k/kplee/work/private/Detector/EGMTnPTree/CMSSW_10_6_13/src/EgammaAnalysis/TnPTreeProducer
+cmsenv
 ```
-Check [TnPTreeProducer\_cfg.py](python/TnPTreeProducer_cfg.py) for all available options. Update the code if you need to implement custom-made recipes.
 
-Test files can be defined in [python/etc/tnpInputTestFiles\_cff.py](python/etc/tnpInputTestFiles_cff.py)
-If you update the code, you can use the ./runTests.py script in the test directory to check for new differences in the 2016, 2017 and 2018 test files.
-
-### 3. Submit jobs
-Check in EgammaAnalysis/TnPTreeProducer//crab the tnpCrabSubmit.py script to submit your jobs using crab
+## Run TnP code locally
 
 ```bash
+cd python
+cmsRun TnPTreeProducer_cfg.py doTrigger=True era=UL2018 maxEvents=10000 >&TnPTreeProducer_cfg.log& \
+tail -f TnPTreeProducer_cfg.log
+
+```
+
+
+
+## Submit CRAB jobs
+
+```bash
+cd crab
 source /cvmfs/cms.cern.ch/common/crab-setup.sh
+python tnpCrabSubmit_T2B.py # -- turn off doL1matching: it doesn't work if doL1matching=True...
+
 ```
 
-## To make a pull request to this repository
-1. On github fork the package https://github.com/cms-analysis/EgammaAnalysis-TnPTreeProducer
-2. Add the remote
+
+
+## Check CRAB status
+
 ```bash
-git remote add username-push git@github.com:username/EgammaAnalysis-TnPTreeProducer.git
+cd /afs/cern.ch/user/k/kplee/work/private/Detector/EGMTnPTree/CMSSW_10_6_13/src/EgammaAnalysis/TnPTreeProducer/crab/crab_2024-09-19
+
+voms-proxy-init --voms cms
+source /cvmfs/cms.cern.ch/common/crab-setup.sh
+
+crab status crab_UL2018_DY_LO
+crab status crab_UL2018_DY_NLO
+crab status crab_UL2018_Run2018A
+crab status crab_UL2018_Run2018B
+crab status crab_UL2018_Run2018C
+crab status crab_UL2018_Run2018D
+
+crab resubmit crab_UL2018_DY_LO
+crab resubmit crab_UL2018_DY_NLO
+crab resubmit crab_UL2018_Run2018A
+crab resubmit crab_UL2018_Run2018B
+crab resubmit crab_UL2018_Run2018C
+crab resubmit crab_UL2018_Run2018D
 ```
-3. push commits to fork and then standard pull request process
-```bash
-git push username-push branchname
-```
 
-## Adding new workingpoints
-You can add new electron workingpoints in [python/egmElectronIDModules\_cff.py](python/egmElectronIDModules_cff.py) and new photon workingpoints
-in [python/egmPhotonIDModules\_cff.py](python/egmPhotonIDModules_cff.py). Each new workingpoint added in these python config fragments will
-add a new "passing<WP>" boolean in the electron and photon trees respectively. Of course, one can also choose to simply add a variable in
-[python/egmTreesContent\_cff.py](python/egmTreesContent\_cff.py), which might be preferred for MVA variables when you want to have the
-flexibility to explore different workingpoints: you can simply put a cut on these variable in the egm\_tnp\_analysis package.
-
-## Description of variables
-
-Description of some of variables in the output tree is given [here](VariablesInfo.md).
-
-## LowPtElectron ntuples
-
-You can create ntuples for the LowPtElectron collection with the RunIIfinal branch and CMSSW_10_6_13 by using
-```bash
-cmsRun TnPTreeProducer_cfg.py doLowPtEleID=True
-```
-This requires samples in miniAOD v2 format. Some test files are immediately available for this by using era=UL2016miniAODv2:
-```bash
-cmsRun TnPTreeProducer_cfg.py doLowPtEleID=True era=UL2016miniAODv2
-```
