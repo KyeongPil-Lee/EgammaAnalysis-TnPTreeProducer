@@ -112,7 +112,7 @@ if varOptions.GT == "auto":
     # lowpt electrons require miniAOD v2 samples
     if options['era'] == 'UL2016miniAODv2':  options['GLOBALTAG'] = '106X_mcRun2_asymptotic_v17'
     if options['era'] == 'UL2017': options['GLOBALTAG'] = '106X_dataRun2_v28'
-    if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_dataRun2_v28'
+    if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_upgrade2018_realistic_v16_L1v1'
   else:
     if options['era'] == '2016':   options['GLOBALTAG'] = '94X_dataRun2_v10'
     if options['era'] == '2017':   options['GLOBALTAG'] = '94X_dataRun2_v11'
@@ -121,7 +121,7 @@ if varOptions.GT == "auto":
     if options['era'] == 'UL2016postVFP': options['GLOBALTAG'] = '106X_dataRun2_v32'
     if options['era'] == 'UL2016miniAODv2':  options['GLOBALTAG'] = '106X_dataRun2_v27'
     if options['era'] == 'UL2017': options['GLOBALTAG'] = '106X_mc2017_realistic_v7'
-    if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_upgrade2018_realistic_v11_L1v1'
+    if options['era'] == 'UL2018': options['GLOBALTAG'] = '106X_dataRun2_v33'
 else:
   options['GLOBALTAG'] = varOptions.GT
 
@@ -225,9 +225,10 @@ process.MessageLogger.cerr.threshold = ''
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
-# process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/40000/7F358B2D-0039-C643-A14C-0AF86E36AE75.root") )
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 
+# process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018D/EGamma/MINIAOD/UL2018_MiniAODv2-v2/2810000/819DCE6F-E39A-784F-A806-A9B3B09353B0.root") )
+# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 ###################################################################
 ## Define sequences and TnP pairs
