@@ -78,14 +78,14 @@ cmsenv
 # crab status crab_UL2018_DY_LO # -- done except for 2 jobs
 # crab status crab_UL2018_DY_NLO # -- completed (23 Sep. 2024)
 # crab status crab_UL2018_Run2018A  # -- completed (23 Sep. 2024)
-crab status crab_UL2018_Run2018B
+# crab status crab_UL2018_Run2018B # -- completed (25 Sep. 2024)
 # crab status crab_UL2018_Run2018C # -- completed (23 Sep. 2024)
-crab status crab_UL2018_Run2018D
+crab status crab_UL2018_Run2018D # -- 63% processed (25 Sep. 2024)
 
 # crab resubmit crab_UL2018_DY_LO
 # crab resubmit crab_UL2018_DY_NLO
 # crab resubmit crab_UL2018_Run2018A
-crab resubmit crab_UL2018_Run2018B
+# crab resubmit crab_UL2018_Run2018B
 # crab resubmit crab_UL2018_Run2018C
 crab resubmit crab_UL2018_Run2018D
 ```
