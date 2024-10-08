@@ -6,7 +6,7 @@ import os
 #
 userName = "kplee"
 # submitVersion = "2024-09-19" # add some date here
-submitVersion = "2024-10-08" # add some date here
+submitVersion = "2024-10-08-v2" # add some date here
 doL1matching  = False
 
 # defaultArgs   = ['doEleID=True','doPhoID=False','doTrigger=True'] # -- for miniAOD

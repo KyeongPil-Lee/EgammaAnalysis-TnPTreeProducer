@@ -224,12 +224,19 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.threshold = ''
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
-process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME'])
+process.source = cms.Source("PoolSource", 
+                            fileNames = options['INPUT_FILE_NAME'],
+                            inputCommands = cms.untracked.vstring("keep *", "drop recoTrackExtrasedmAssociation_muonReducedTrackExtras__RECO"))
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 
 # process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018D/EGamma/MINIAOD/UL2018_MiniAODv2-v2/2810000/819DCE6F-E39A-784F-A806-A9B3B09353B0.root") )
 # process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018A/EGamma/AOD/12Nov2019_UL2018-v2/70000/80BD4259-FF0E-DA47-AC53-DF610BE2EC6E.root") )
 # process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.source = cms.Source("PoolSource", 
+  fileNames = cms.untracked.vstring("/store/mc/RunIISummer20UL18RECO/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/AODSIM/106X_upgrade2018_realistic_v11_L1v1-v1/270004/22C4E1FC-D896-2345-B4F5-05CAD89E343E.root"), 
+  inputCommands = cms.untracked.vstring("keep *", "drop recoTrackExtrasedmAssociation_muonReducedTrackExtras__RECO") 
+  )
+# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 ###################################################################
 ## Define sequences and TnP pairs
