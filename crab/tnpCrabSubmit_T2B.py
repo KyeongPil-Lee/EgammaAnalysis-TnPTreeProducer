@@ -5,10 +5,12 @@ import os
 # Example script to submit TnPTreeProducer to crab
 #
 userName = "kplee"
-submitVersion = "2024-09-19" # add some date here
+# submitVersion = "2024-09-19" # add some date here
+submitVersion = "2024-10-08" # add some date here
 doL1matching  = False
 
-defaultArgs   = ['doEleID=True','doPhoID=False','doTrigger=True']
+# defaultArgs   = ['doEleID=True','doPhoID=False','doTrigger=True'] # -- for miniAOD
+defaultArgs   = ['isAOD=True','doRECO=True','doEleID=False','doTrigger=False'] # -- for AOD
 # mainOutputDir = '/store/group/phys_egamma/tnpTuples/%s/%s' % (os.environ['USER'], submitVersion)
 mainOutputDir = '/store/user/%s/EGMTnPTree/%s' % (userName, submitVersion)
 
@@ -133,14 +135,24 @@ if isReleaseAbove(10,6):
   # submitWrapper('DY_NLO',  '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer19UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1/MINIAODSIM', era)
   # submitWrapper('DY_LO',   '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer19UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1/MINIAODSIM', era)
 
+  # -- miniAOD
   era       = 'UL2018'
-  submitWrapper('Run2018A', '/EGamma/Run2018A-UL2018_MiniAODv2-v1/MINIAOD', era)
-  submitWrapper('Run2018B', '/EGamma/Run2018B-UL2018_MiniAODv2-v1/MINIAOD', era)
-  submitWrapper('Run2018C', '/EGamma/Run2018C-UL2018_MiniAODv2-v1/MINIAOD', era)
-  submitWrapper('Run2018D', '/EGamma/Run2018D-UL2018_MiniAODv2-v2/MINIAOD', era)
+  # submitWrapper('Run2018A', '/EGamma/Run2018A-UL2018_MiniAODv2-v1/MINIAOD', era)
+  # submitWrapper('Run2018B', '/EGamma/Run2018B-UL2018_MiniAODv2-v1/MINIAOD', era)
+  # submitWrapper('Run2018C', '/EGamma/Run2018C-UL2018_MiniAODv2-v1/MINIAOD', era)
+  # submitWrapper('Run2018D', '/EGamma/Run2018D-UL2018_MiniAODv2-v2/MINIAOD', era)
 
-  submitWrapper('DY_NLO',   '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM', era)
-  submitWrapper('DY_LO',    '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM', era)
+  # submitWrapper('DY_NLO',   '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM', era)
+  # submitWrapper('DY_LO',    '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM', era)
+
+  era       = 'UL2018'
+  submitWrapper('Run2018A', '/EGamma/Run2018A-12Nov2019_UL2018-v2/AOD', era)
+  submitWrapper('Run2018B', '/EGamma/Run2018B-12Nov2019_UL2018-v2/AOD', era)
+  submitWrapper('Run2018C', '/EGamma/Run2018C-12Nov2019_UL2018-v2/AOD', era)
+  submitWrapper('Run2018D', '/EGamma/Run2018D-12Nov2019_UL2018-v8/AOD', era)
+
+  submitWrapper('DY_NLO',   '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18RECO-106X_upgrade2018_realistic_v11_L1v1-v1/AODSIM', era)
+  submitWrapper('DY_LO',    '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18RECO-106X_upgrade2018_realistic_v11_L1v1-v1/AODSIM', era)
 
 else:
   era       = '2016'

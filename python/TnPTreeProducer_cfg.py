@@ -228,6 +228,7 @@ process.source = cms.Source("PoolSource", fileNames = options['INPUT_FILE_NAME']
 process.maxEvents = cms.untracked.PSet( input = options['MAXEVENTS'])
 
 # process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018D/EGamma/MINIAOD/UL2018_MiniAODv2-v2/2810000/819DCE6F-E39A-784F-A806-A9B3B09353B0.root") )
+# process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring("/store/data/Run2018A/EGamma/AOD/12Nov2019_UL2018-v2/70000/80BD4259-FF0E-DA47-AC53-DF610BE2EC6E.root") )
 # process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 ###################################################################
