@@ -22,6 +22,7 @@ SCProbeVariablesToStore = cms.PSet(
     sc_et     = cms.string("et"),
     sc_e      = cms.string("energy"),
     sc_tkIso  = cms.InputTag("recoEcalCandidateHelper:scTkIso"),
+    sc_seedGain = cms.InputTag("recoEcalCandidateHelper:seedGain"),
     )
 
 

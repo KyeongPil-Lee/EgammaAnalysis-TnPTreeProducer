@@ -146,8 +146,8 @@ def setGoodParticlesAOD(process, options):
                                           beamSpot         = cms.InputTag("offlineBeamSpot"),
                                           conversions      = cms.InputTag("allConversions"),
                                           pfCandidates     = cms.InputTag("particleFlow"),
-                                          ebRecHits        = cms.InputTag("reducedEgamma","reducedEBRecHits","RECO"),
-                                          eeRecHits        = cms.InputTag("reducedEgamma","reducedEERecHits","RECO"),
+                                          ebRecHits        = cms.InputTag("reducedEcalRecHitsEB","","RECO"),
+                                          eeRecHits        = cms.InputTag("reducedEcalRecHitsEE","","RECO"),
                                           )
 
     process.hltVarHelper = cms.EDProducer("GsfElectronHLTVariableHelper",
@@ -224,6 +224,8 @@ def setGoodParticlesAOD(process, options):
 
     process.recoEcalCandidateHelper = cms.EDProducer("RecoEcalCandidateVariableHelper",
                                                      probes = cms.InputTag("superClusterCands"),
+                                                     ebRecHits        = cms.InputTag("reducedEcalRecHitsEB","","RECO"),
+                                                     eeRecHits        = cms.InputTag("reducedEcalRecHitsEE","","RECO"),
                                                      countTracks = cms.bool( False ),
                                                      trkIsoPtMin = cms.double( 0.5 ),
                                                      trkIsoStripEndcap = cms.double( 0.03 ),
