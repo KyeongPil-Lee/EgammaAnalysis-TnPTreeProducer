@@ -143,8 +143,8 @@ cmsenv
 voms-proxy-init --voms cms
 
 crab status crab_UL2018_Run2018A
-crab status crab_UL2018_Run2018B
-crab status crab_UL2018_Run2018C
+# crab status crab_UL2018_Run2018B # -- done (4PM, 9 Oct.)
+# crab status crab_UL2018_Run2018C # -- done (4PM, 9 Oct.)
 crab status crab_UL2018_Run2018D
 
 crab resubmit crab_UL2018_Run2018A
@@ -155,7 +155,7 @@ crab resubmit crab_UL2018_Run2018D
 cd ../crab_2024-10-08-v2
 
 crab status crab_UL2018_DY_LO
-crab status crab_UL2018_DY_NLO
+# crab status crab_UL2018_DY_NLO # -- done (4PM, 9 Oct.)
 
 crab resubmit crab_UL2018_DY_LO
 crab resubmit crab_UL2018_DY_NLO
