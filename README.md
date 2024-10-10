@@ -154,7 +154,7 @@ crab resubmit crab_UL2018_Run2018D
 
 cd ../crab_2024-10-08-v2
 
-crab status crab_UL2018_DY_LO # -- 99.6% done (3PM, 10 Oct.)
+crab status crab_UL2018_DY_LO # -- done (5PM, 10 Oct.)
 # crab status crab_UL2018_DY_NLO # -- done (4PM, 9 Oct.)
 
 crab resubmit crab_UL2018_DY_LO
