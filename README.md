@@ -145,12 +145,12 @@ voms-proxy-init --voms cms
 # crab status crab_UL2018_Run2018A # -- done (12PM, 11 Oct.)
 # crab status crab_UL2018_Run2018B # -- done (4PM, 9 Oct.)
 # crab status crab_UL2018_Run2018C # -- done (4PM, 9 Oct.)
-crab status crab_UL2018_Run2018D # -- tape recall (12PM, 11 Oct.)
+# crab status crab_UL2018_Run2018D # -- done (12PM, 16 Oct.)
 
 # crab resubmit crab_UL2018_Run2018A
 # crab resubmit crab_UL2018_Run2018B
 # crab resubmit crab_UL2018_Run2018C
-crab resubmit crab_UL2018_Run2018D
+# crab resubmit crab_UL2018_Run2018D
 
 cd ../crab_2024-10-08-v2
 
