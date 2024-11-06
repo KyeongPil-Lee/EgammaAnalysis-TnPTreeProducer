@@ -90,6 +90,18 @@ crab status crab_UL2018_Run2018D # -- 96.9% processed (26 Sep. 2024)
 crab resubmit crab_UL2018_Run2018D
 ```
 
+### Additional MC tree: Powheg-MiNNLO
+
+```bash
+cd /afs/cern.ch/work/k/kplee/private/Detector/EGMTnPTree/CMSSW_10_6_13/src/EgammaAnalysis/TnPTreeProducer/crab/crab_2024-11-06
+cmssw-el7
+cmsenv
+voms-proxy-init --voms cms
+crab status crab_UL2018_DY_NLO
+```
+
+
+
 
 
 ## TnP tree for RECO
